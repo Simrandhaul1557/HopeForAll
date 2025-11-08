@@ -25,16 +25,24 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Trust proxy for production
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/ngo_website';
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000, // 5 seconds timeout
+      socketTimeoutMS: 45000, // 45 seconds socket timeout
+    });
     console.log('✅ MongoDB Connected Successfully');
   } catch (error) {
     console.error('❌ MongoDB Connection Error:', error);
-    process.exit(1); // Exit process with failure
+    process.exit(1);
   }
 };
 
@@ -74,23 +82,63 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
-// Enable CORS
-const allowedOrigins = isProduction 
-  ? ['https://your-production-domain.com']
-  : ['http://localhost:3000', 'http://localhost:8080'];
+// CORS Configuration
+const getCorsOptions = () => {
+  // Get allowed origins from environment variable or use development defaults
+  const allowedOrigins = process.env.ALLOWED_ORIGINS 
+    ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+    : [
+        'http://localhost:3000',
+        'http://localhost:5000',
+        'http://localhost:8080',
+        'http://localhost:4173',
+        'http://localhost:5173'
+      ];
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+  // Add Vercel preview URLs if not already present
+  if (process.env.VERCEL_URL) {
+    const vercelUrl = `https://${process.env.VERCEL_URL}`;
+    if (!allowedOrigins.includes(vercelUrl)) {
+      allowedOrigins.push(vercelUrl);
     }
-  },
-  optionsSuccessStatus: 200,
-  credentials: true
+  }
+
+  // Production configuration
+  if (process.env.NODE_ENV === 'production') {
+    return {
+      origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Check if origin is allowed
+        if (allowedOrigins.includes(origin) || 
+            allowedOrigins.some(allowed => origin.endsWith(allowed.replace('https://', '')))) {
+          return callback(null, true);
+        }
+        
+        console.log('Blocked by CORS:', origin);
+        return callback(new Error('Not allowed by CORS'));
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      exposedHeaders: ['Content-Range', 'X-Content-Range']
+    };
+  }
+
+  // Development configuration
+  return {
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  };
 };
-app.use(cors(corsOptions));
+
+app.use(cors(getCorsOptions()));
+
+// Handle preflight requests
+app.options('*', cors(getCorsOptions()));
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
