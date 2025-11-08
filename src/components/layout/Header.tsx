@@ -8,19 +8,19 @@ const Header = () => {
   const location = useLocation();
 
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Projects", path: "/projects" },
-    { name: "Volunteer", path: "/volunteer" },
-    { name: "Contact", path: "/contact" },
+    { name: 'Home', path: "/" },
+    { name: 'About', path: "/about" },
+    { name: 'Projects', path: "/projects" },
+    { name: 'Volunteer', path: "/volunteer" },
+    { name: 'Contact', path: "/contact" },
   ];
 
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-white/10">
-      <nav className="container mx-auto px-4 py-4">
-        <div className="flex items-center justify-between">
+    <header className="fixed top-4 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg">
+      
+  <div className="rounded-full border border-violet-200/60 px-4 py-1.5 flex items-center justify-between max-w-4xl mx-auto">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="bg-gradient-to-r from-[hsl(330,100%,50%)] to-[hsl(280,100%,60%)] p-2 rounded-lg group-hover:scale-110 transition-transform">
@@ -63,7 +63,7 @@ const Header = () => {
               <Menu className="w-6 h-6" />
             )}
           </button>
-        </div>
+  </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
@@ -91,7 +91,7 @@ const Header = () => {
             </div>
           </div>
         )}
-      </nav>
+      
     </header>
   );
 };

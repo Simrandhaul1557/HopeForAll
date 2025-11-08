@@ -1,11 +1,13 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import HeroVisual from "@/components/ui/HeroVisual";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Users, Leaf, GraduationCap, Stethoscope, Droplet, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import ProjectTimeline from "@/components/ui/ProjectTimeline";
 
 const Projects = () => {
   const ongoingProjects = [
@@ -83,8 +85,9 @@ const Projects = () => {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 mb-16">
-          <div className="text-center max-w-3xl mx-auto animate-fade-in">
+        <section className="container mx-auto px-4 mb-16 relative">
+          <HeroVisual />
+          <div className="text-center max-w-3xl mx-auto animate-fade-in relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Our <span className="gradient-text">Projects</span>
             </h1>
@@ -183,6 +186,9 @@ const Projects = () => {
             </TabsContent>
           </Tabs>
         </section>
+
+        {/* Project Timeline Visualization */}
+        <ProjectTimeline />
 
         {/* CTA Section */}
         <section className="container mx-auto px-4 mt-20">

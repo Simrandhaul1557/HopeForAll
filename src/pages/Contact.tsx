@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import HeroVisual from "@/components/ui/HeroVisual";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -51,8 +52,9 @@ const Contact = () => {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 mb-16">
-          <div className="text-center max-w-3xl mx-auto animate-fade-in">
+        <section className="container mx-auto px-4 mb-16 relative">
+          <HeroVisual />
+          <div className="text-center max-w-3xl mx-auto animate-fade-in relative z-10">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
               Get in <span className="gradient-text">Touch</span>
             </h1>

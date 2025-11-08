@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import HeroVisual from "@/components/ui/HeroVisual";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +10,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart, CreditCard, DollarSign, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import DonorWall from "@/components/donor/DonorWall";
 
 const Donate = () => {
   const { toast } = useToast();
@@ -21,8 +23,8 @@ const Donate = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
-      title: "Thank you for your donation!",
-      description: "Your contribution will make a real difference.",
+      title: 'Thank you for your donation!',
+      description: 'Your contribution will make a real difference.',
     });
   };
 
@@ -32,8 +34,9 @@ const Donate = () => {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 mb-16">
-          <div className="text-center max-w-3xl mx-auto animate-fade-in">
+        <section className="container mx-auto px-4 mb-16 relative">
+          <HeroVisual />
+          <div className="text-center max-w-3xl mx-auto animate-fade-in relative z-10">
             <div className="bg-gradient-to-r from-[hsl(330,100%,50%)] to-[hsl(280,100%,60%)] p-4 rounded-full w-fit mx-auto mb-6">
               <Heart className="w-12 h-12 text-white" />
             </div>
@@ -234,8 +237,8 @@ const Donate = () => {
             </div>
           </div>
         </section>
+        <DonorWall /> 
       </main>
-
       <Footer />
     </div>
   );

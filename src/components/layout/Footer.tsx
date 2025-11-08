@@ -111,8 +111,9 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-white/10 text-center">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} HopeForAll NGO. All rights reserved.
+          <p className="text-sm text-muted-foreground flex items-center justify-center gap-1.5">
+            Made with <Heart className="w-4 h-4 text-[hsl(330,100%,50%)] animate-pulse" aria-label="love" /> by{" "}
+            <span className="gradient-text font-medium">Simran K Dhaul</span>
           </p>
         </div>
       </div>

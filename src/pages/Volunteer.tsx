@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import HeroVisual from "@/components/ui/HeroVisual";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,12 +10,17 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Users, Heart, Globe, Clock } from "lucide-react";
+import { Users, Heart, Globe, Clock, Briefcase, MapPin, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import EventsCalendar from "@/components/ui/EventsCalendar";
+import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { SkillMatching } from "@/components/volunteer/SkillMatching";
 
 const Volunteer = () => {
   const { toast } = useToast();
   const [skills, setSkills] = useState<string[]>([]);
+  const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,8 +66,9 @@ const Volunteer = () => {
       
       <main className="pt-24 pb-20">
         {/* Hero Section */}
-        <section className="container mx-auto px-4 mb-16">
-          <div className="text-center max-w-3xl mx-auto animate-fade-in">
+        <section className="container mx-auto px-4 mb-16 relative">
+          <HeroVisual />
+          <div className="text-center max-w-3xl mx-auto animate-fade-in relative z-10">
             <div className="bg-gradient-to-r from-[hsl(330,100%,50%)] to-[hsl(280,100%,60%)] p-4 rounded-full w-fit mx-auto mb-6">
               <Users className="w-12 h-12 text-white" />
             </div>
@@ -93,135 +101,37 @@ const Volunteer = () => {
                     <Clock className="w-4 h-4" />
                     <span>{opportunity.commitment}</span>
                   </div>
+                  <Link to="/volunteer-apply">
+                    <Button variant="hero" className="w-full mt-4">
+                      Apply
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
           </div>
         </section>
 
-        {/* Application Form */}
-        <section className="container mx-auto px-4 max-w-3xl">
-          <Card className="glass-card">
-            <CardHeader>
-              <CardTitle className="text-2xl">Volunteer Application</CardTitle>
-              <CardDescription>Tell us about yourself and how you'd like to contribute</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Personal Information */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Personal Information</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">First Name *</Label>
-                      <Input id="firstName" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name *</Label>
-                      <Input id="lastName" required />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email *</Label>
-                    <Input id="email" type="email" required />
-                  </div>
-                  <div>
-                    <Label htmlFor="phone">Phone Number</Label>
-                    <Input id="phone" type="tel" />
-                  </div>
-                  <div>
-                    <Label htmlFor="location">Location/City *</Label>
-                    <Input id="location" required />
-                  </div>
-                </div>
+        {/* Events Calendar Section */}
+        <EventsCalendar />
 
-                {/* Volunteer Preferences */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Volunteer Preferences</h3>
-                  <div>
-                    <Label htmlFor="availability">Availability *</Label>
-                    <Select required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your availability" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card border-white/10">
-                        <SelectItem value="weekdays">Weekdays</SelectItem>
-                        <SelectItem value="weekends">Weekends</SelectItem>
-                        <SelectItem value="flexible">Flexible</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="hours">Hours per week *</Label>
-                    <Select required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select hours per week" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-card border-white/10">
-                        <SelectItem value="1-5">1-5 hours</SelectItem>
-                        <SelectItem value="5-10">5-10 hours</SelectItem>
-                        <SelectItem value="10-20">10-20 hours</SelectItem>
-                        <SelectItem value="20+">20+ hours</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                {/* Skills & Interests */}
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold">Skills & Interests</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {skillOptions.map((skill) => (
-                      <div key={skill} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={skill}
-                          checked={skills.includes(skill)}
-                          onCheckedChange={(checked) => {
-                            if (checked) {
-                              setSkills([...skills, skill]);
-                            } else {
-                              setSkills(skills.filter((s) => s !== skill));
-                            }
-                          }}
-                        />
-                        <Label htmlFor={skill} className="cursor-pointer">
-                          {skill}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Additional Information */}
-                <div>
-                  <Label htmlFor="motivation">Why do you want to volunteer with us? *</Label>
-                  <Textarea
-                    id="motivation"
-                    placeholder="Tell us about your motivation and what you hope to contribute..."
-                    className="min-h-[120px]"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="experience">Relevant Experience</Label>
-                  <Textarea
-                    id="experience"
-                    placeholder="Share any relevant volunteer or professional experience..."
-                    className="min-h-[100px]"
-                  />
-                </div>
-
-                <Button type="submit" variant="hero" size="lg" className="w-full">
-                  Submit Application
-                </Button>
-
-                <p className="text-xs text-center text-muted-foreground">
-                  By submitting this form, you agree to our volunteer terms and conditions
+        {/* Skill-Based Matching Section */}
+        <section className="py-24 md:py-32 bg-gradient-to-b from-muted/10 to-background">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-20">
+                <h2 className="text-5xl md:text-5xl lg:text-5xl font-bold mb-6">
+                  {t('volunteer.title')}
+                </h2>
+                <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto">
+                  {t('volunteer.subtitle')}
                 </p>
-              </form>
-            </CardContent>
-          </Card>
+              </div>
+              <div className="bg-card/80 backdrop-blur-sm border border-border/50 rounded-3xl shadow-2xl p-8 md:p-12">
+                <SkillMatching />
+              </div>
+            </div>
+          </div>
         </section>
       </main>
 
